@@ -1301,6 +1301,7 @@ DialogState::msgState SipDialog::getDialogState() const
 {
 	// Do not add a default case so that if someone adds a new SipState they will get a warning here.
 	// Therefore we define every state including the impossible ones.
+    return DialogState::dialogRinging;
 	switch (getSipState()) {
 	case SSNullState:
 		return DialogState::dialogUndefined;

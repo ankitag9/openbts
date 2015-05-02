@@ -24,6 +24,8 @@
 #include <L3TranEntry.h>	// For NewTransactionTable.
 #include <MAC.h>
 #include <math.h>
+#include <Timeval.h>
+#include <sstream>
 
 using namespace Control;
 using namespace GPRS;
@@ -522,6 +524,8 @@ static unsigned newPageAll()
 	// Move the pages from the single incoming queue to the individual PCH paging queues.
 	for (Control::NewPagingList_t::iterator lp = pages.begin(); lp != pages.end(); lp++) {
 		gPagingQ.addPage(new NewPagingEntry(*lp));
+        Timeval tp;
+        LOG(INFO)<<"Paging:IMSI="<<lp->mImsi<<"@timestamp:"<<tp;
 	}
 	return pages.size();
 }

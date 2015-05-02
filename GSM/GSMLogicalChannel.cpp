@@ -589,6 +589,7 @@ void L2LogicalChannelBase::l2sendm(const L3Message& msg, GSM::Primitive prim, SA
 {
 	//OBJLOG(INFO) << "L3" <<LOGVAR(SAPI) << " sending " << msg;
 	WATCHINFO("l2sendm "<<this <<LOGVAR(SAPI) << " sending " << msg);
+    
 	l2sendf(L3Frame(msg,prim,SAPI));
 }
 

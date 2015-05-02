@@ -31,6 +31,8 @@
 #include <Interthread.h>
 #include <Timeval.h>
 #include <Globals.h>
+#include <Timeval.h>
+#include <string>
 
 
 #include <GSMConfig.h>
@@ -98,6 +100,8 @@ void NewPagingResponseHandler(const L3PagingResponse* resp, MMContext* mmchan)
 	assert(resp);
 	assert(mmchan);
 	LOG(INFO) << *resp;
+    Timeval tp;
+    LOG(INFO) << "Response Received for "<<resp->mobileID()<<"@timestamp:"<<tp;
 
 	// Nowadays, we dont page unless we know both the tmsi and the imsi of the MS, so just look it up.
 	L3MobileIdentity mobileId = resp->mobileID();

@@ -1036,10 +1036,24 @@ static CLIStatus page(int argc, char **argv, ostream& os)
 	Control::gMMLayer.mmAddMT(tran);
 	return SUCCESS;
 }
-
-
-
-
+    
+    
+static CLIStatus call(int argc, char **argv, ostream& os)
+{
+    if (argc!=2)
+        return BAD_NUM_ARGS;
+    
+    char *IMSI = argv[1];
+    if (strlen(IMSI)>15) {
+        os << IMSI << " is not a valid IMSI" << endl;
+        return BAD_VALUE;
+    }
+    // (pat) Implement pat by just sending an SMS.
+    Control::FullMobileId msid(IMSI);
+    Control::TranEntry *tran = Control::TranEntry::newMTC(NULL,msid,GSM::L3CMServiceType(GSM::L3CMServiceType::MobileTerminatedCall),"23423");
+    Control::gMMLayer.mmAddMT(tran);
+    return SUCCESS;
+}
 
 // Return the Transaction Id or zero is an invalid value.
 static TranEntryId transactionId(const char *id)
@@ -1731,6 +1745,7 @@ void Parser::addCommands()
 	addCommand("alarms", alarms, "-- show latest alarms.");
 	addCommand("version", version,"-- print the version string.");
 	addCommand("page", page, "print the paging table.");
+    addCommand("call", call, "print the paging table.");
 	addCommand("chans", chans, chansHelp);
         addCommand("rxgain", rxgain, "[newRxgain] -- get/set the RX gain in dB.");
         addCommand("txatten", txatten, "[newTxAtten] -- get/set the TX attenuation in dB.");

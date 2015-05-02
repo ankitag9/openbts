@@ -50,6 +50,7 @@ ReportingTable gReports(gConfig.getStr("Control.Reporting.StatsTable").c_str());
 
 #include <ControlTransfer.h>
 #include <Control/TMSITable.h>
+#include <L3MMLayer.h>
 
 #include <Globals.h>
 
@@ -72,6 +73,7 @@ ReportingTable gReports(gConfig.getStr("Control.Reporting.StatsTable").c_str());
 
 #include "SelfDetect.h"
 
+
 // (pat) mcheck.h is for mtrace, which permits memory leak detection.
 // Set env MALLOC_TRACE=logfilename
 // Call mtrace() in the program.
@@ -80,6 +82,8 @@ ReportingTable gReports(gConfig.getStr("Control.Reporting.StatsTable").c_str());
 
 using namespace std;
 using namespace GSM;
+using namespace Control;
+
 
 const char* gDateTime = TIMESTAMP_ISO;
 
@@ -565,12 +569,49 @@ struct TimeSlots {
 	}
 };
 
+void sendRequest()
+{
+    static bool called = false;
+    while (1) {
+        //LOG(INFO) << "called" ;
+        vector< vector<string> > view = gTMSITable.tmsiTabView(0, false, 100);
+        vector<string> imsis;
+        for (unsigned nrow = 1; nrow < view.size(); nrow++) {
+            vector<string> &row = view[nrow];
+            const char *val = row[0].c_str();
+            imsis.push_back(val);
+            //LOG(INFO) << "tmsiTableData " << val;
+        }
+        if(imsis.size() > 0){
+            for (int i=0; i<imsis.size(); i++) {
+                LOG(INFO) << "tmsiTableData imsis " << imsis[i];
+            }
+            if (!called){
+                Control::FullMobileId msid(imsis[0]);
+                Control::TranEntry *tran = Control::TranEntry::newMTC(NULL,msid,GSM::L3CMServiceType(GSM::L3CMServiceType::MobileTerminatedCall),"23423");
+                
+                //Control::TranEntry *tran = Control::TranEntry::newMTSMS(NULL, msid, GSM::L3CallingPartyBCDNumber("123"), "check123", string("text/plain"));
+                Control::gMMLayer.mmAddMT(tran);
+                called = true;
+            }
+            else{
+                Control::gMMLayer.mmTerminateByImsi(imsis[0]);
+                called = false;
+            }
+        }
+        sleep(5);
+    }
+}
+
 
 int main(int argc, char *argv[])
 {
 	//mtrace();       // (pat) Enable memory leak detection.  Unfortunately, huge amounts of code have been started in the constructors above.
 	gLogGroup.setAll();
 	processArgs(argc, argv);
+    
+    Thread sendPagingRequest;
+    sendPagingRequest.start((void*(*)(void*)) sendRequest, NULL);
 
 	// register ourself to prevent two instances (and check that no other
 	// one is running).  Note that this MUST be done after the logger gets

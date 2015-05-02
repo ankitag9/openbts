@@ -895,11 +895,11 @@ MachineStatus MTCMachine::machineRunState(int state, const GSM::L3Message* l3msg
 	PROCLOG2(DEBUG,state)<<LOGVAR(state)<<LOGVAR(l3msg)<<LOGVAR(sipmsg)<<LOGVAR2("imsi",tran()->subscriber());
 	switch(state) {
 		case stateStart: {
-			if (getDialog()->isFinished()) {
+			/*if (getDialog()->isFinished()) {
 				// SIP side closed already.
 				//formerly: return closeCall(L3Cause::Interworking_Unspecified);
 				return closeCall(dialog2TermCause(getDialog()));
-			}
+			}*/
 
 			// Allocate channel now, to be sure there is one.
 			// Formerly all we had to do was check the VEA flag, since that controlled the channel type,

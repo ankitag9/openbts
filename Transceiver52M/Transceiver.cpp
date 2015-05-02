@@ -502,7 +502,9 @@ void Transceiver::driveControl()
       sprintf(response,"RSP POWERON 0");
       if (!mOn) {
         // Prepare for thread start
-        mPower = -20;
+          LOG(NOTICE) << "mpower about to be updated from: " << mPower;
+          mPower = -20;
+          LOG(NOTICE) << "mpower updated to: " << mPower;
         mRadioInterface->start();
 
         // Start radio interface threads.
@@ -545,7 +547,9 @@ void Transceiver::driveControl()
     if (!mOn) 
       sprintf(response,"RSP SETPOWER 1 %d",dbPwr);
     else {
+      LOG(NOTICE) << "mpower about to be updated from: " << mPower;
       mPower = dbPwr;
+      LOG(NOTICE) << "mpower updated to: " << mPower;
       mRadioInterface->setPowerAttenuation(dbPwr);
       sprintf(response,"RSP SETPOWER 0 %d",dbPwr);
     }
@@ -557,7 +561,10 @@ void Transceiver::driveControl()
     if (!mOn) 
       sprintf(response,"RSP ADJPOWER 1 %d",mPower);
     else {
-      mPower += dbStep;
+        LOG(NOTICE) << "mpower about to be updated from: " << mPower;
+        mPower += dbStep;
+        LOG(NOTICE) << "mpower updated to: " << mPower;
+
       sprintf(response,"RSP ADJPOWER 0 %d",mPower);
     }
   }

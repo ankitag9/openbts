@@ -5,6 +5,7 @@
 *.o
 *.lo
 *.la
+.DS_Store
 Makefile
 aclocal.m4
 autom4te.cache

@@ -106,7 +106,7 @@ static const char *getPeeringMsgArg1(const char *message)
 // DEBUG level - all messages.
 static void logMessage(const char*sendOrRecv, const struct sockaddr_in* peer, const char *message)
 {
-	const char *arg1 = getPeeringMsgArg1(message);
+	/*const char *arg1 = getPeeringMsgArg1(message);
 	if (0 == strncmp(arg1,"HANDOVER",8)) {
 		LOG(INFO) << "Peering "<<sendOrRecv <<LOGVAR2("peer",sockaddr2string(peer,true)) <<LOGVAR(message);
 		// We used to watch everything except REQ NEI messages: if (strncmp(message,"REQ NEI",7))
@@ -116,7 +116,7 @@ static void logMessage(const char*sendOrRecv, const struct sockaddr_in* peer, co
 	} else {
 		// At DEBUG level log all messages.
 		LOG(DEBUG) << "Peering "<<sendOrRecv<<LOGVAR2("peer",sockaddr2string(peer,true)) <<LOGVAR(message);
-	}
+	}*/
 
 }
 
